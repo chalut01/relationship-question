@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>แบบประเมินความสัมพันธ์ 20 ข้อ</title>
+<style>
+    body { font-family: Arial, sans-serif; max-width: 700px; margin: 0 auto; padding: 20px; }
+    h1 { text-align: center; }
+    .question { margin-bottom: 20px; }
+    label { display: block; margin-bottom: 5px; font-weight: bold; }
+    input[type=range] { width: 100%; }
+    #submitBtn { display: block; margin: 30px auto; padding: 10px 20px; font-size: 16px; cursor: pointer; }
+    #result { text-align: center; margin-top: 30px; font-size: 20px; font-weight: bold; }
+    .value { font-weight: normal; margin-left: 10px; }
+</style>
+</head>
+<body>
+<h1>แบบประเมินความสัมพันธ์ 20 ข้อ</h1>
+<form id="relationshipForm">
+
+<script>
+const questions = [
+"เวลาอยู่ด้วยกัน คุณรู้สึกเป็นตัวของตัวเองมากแค่ไหน",
+"เขารับฟังคุณจริง ๆ หรือไม่",
+"การสื่อสารระหว่างกันราบรื่นไหม",
+"เวลามีปัญหา เขาช่วยคุณแค่ไหน",
+"คุณรู้สึกปลอดภัยต่อเขามากแค่ไหน (ใจ/กาย/การเงิน)",
+"เขาให้เกียรติคุณในการตัดสินใจไหม",
+"คุณเชื่อใจเขามากแค่ไหน",
+"เขาให้เวลากับคุณเพียงพอไหม",
+"เขาพยายามปรับตัวเพื่อคุณบ้างไหม",
+"คุณมีความสุขเวลาที่อยู่ด้วยกันมากแค่ไหน",
+"ค่านิยมและเป้าหมายชีวิตเข้ากันไหม",
+"เขาใส่ใจวันสำคัญและความรู้สึกของคุณมากแค่ไหน",
+"คุณรู้สึกว่าต้องตามเขาแค่ไหน",
+"เขาให้พื้นที่ส่วนตัวและเคารพความเป็นส่วนตัวไหม",
+"เขาชื่นชมและสนับสนุนคุณไหม",
+"เวลาคุณไม่โอเค เขาใส่ใจความรู้สึกคุณไหม",
+"ความสัมพันธ์นี้ทำให้คุณเหนื่อยแค่ไหน",
+"คุณรู้สึกว่าความสัมพันธ์นี้เติบโตขึ้นไหม",
+"เขาเสมอต้นเสมอปลายมากแค่ไหน",
+"เมื่อคิดถึงอนาคต คุณอยากมีเขาอยู่ด้วยไหม"
+];
+
+const form = document.getElementById("relationshipForm");
+
+questions.forEach((q, i) => {
+    const div = document.createElement("div");
+    div.className = "question";
+    div.innerHTML = `
+      <label>${i+1}. ${q}</label>
+      <input type="range" min="1" max="10" value="5" class="slider" name="q${i+1}">
+      <span class="value">5</span>
+    `;
+    form.insertBefore(div, document.getElementById("submitBtn"));
+});
+
+const sliders = document.querySelectorAll('.slider');
+sliders.forEach(slider => {
+  const valueSpan = slider.nextElementSibling;
+  slider.addEventListener('input', () => {
+    valueSpan.textContent = slider.value;
+  });
+});
+</script>
+
+<button type="button" id="submitBtn">ส่งแบบสอบถาม</button>
+</form>
+
+<div id="result"></div>
+
+<script>
+document.getElementById('submitBtn').addEventListener('click', () => {
+  const sliders = document.querySelectorAll('.slider');
+  let total = 0;
+  sliders.forEach(slider => total += parseInt(slider.value));
+  const maxScore = sliders.length * 10;
+  const percent = ((total / maxScore) * 100).toFixed(1);
+
+  let message = '';
+  if(total >= 160) message = 'ความสัมพันธ์ค่อนข้างดีและมั่นคง ควรไปต่อ';
+  else if(total >= 120) message = 'มีบางจุดดีบางจุดแย่ ควรคุยและแก้ปัญหา';
+  else if(total >= 80) message = 'ความสัมพันธ์เริ่มไม่สมดุล ต้องพิจารณาอย่างรอบคอบ';
+  else message = 'มีความเสี่ยงสูง ควรพิจารณา “พอแค่นี้”';
+
+  document.getElementById('result').innerHTML = 
+      `คะแนนรวม: ${total}/${maxScore} (${percent}%)<br>${message}`;
+
+  // เลื่อนหน้าจอไปผลลัพธ์
+  document.getElementById('result').scrollIntoView({ behavior: "smooth" });
+});
+</script>
+</body>
+</html>
